@@ -1,6 +1,6 @@
 # DENSER: 3D Gaussians Splatting for Scene Reconstruction of Dynamic Urban Environments
 
-This repository the implementation of the paper. Code to come soon!
+This repository will host the paper implementation. Code to come soon!
 
 ```
 @misc{mohamad2024denser,
