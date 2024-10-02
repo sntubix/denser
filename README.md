@@ -7,7 +7,6 @@
 ### Step 1: Clone the Repository
 ```bash
 git clone https://github.com/mahmudi95/DENSER.git --recursive
-cd DENSER
 ```
 ### Step 2: Install Dependencies
 ```bash
