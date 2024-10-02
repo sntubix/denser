@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "denser-nerfstudio"
+version = "0.1.0"
+description = "The official code repository for the paper: DENSER"
+readme = "README.md"
+
+requires-python = ">=3.8.0"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python",
+]
+
+dependencies = [
+    "nerfstudio==1.1.0",
+]
+
+
+[project.urls]
+"Homeage" = " "
+
+[tool.setuptools.packages.find]
+include = ["denser*"]
+
+[project.entry-points.'nerfstudio.method_configs']
+ubix-kitti-gs-recon = 'denser.configs.method_config:denser'
+
+[project.entry-points.'nerfstudio.dataparser_configs']
+KittiData = 'denser.data.dataparsers.ubix_kitti_dataparser:KittiParserSpec'
+
+
+[project.scripts]
+
+ds-train = "nerfstudio.scripts.train:entrypoint"
+ds-viewer = "nerfstudio.scripts.viewer.run_viewer:entrypoint"
+ds-eval = "nerfstudio.scripts.eval:entrypoint"
+ds-render = "nerfstudio.scripts.render:entrypoint"
