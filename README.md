@@ -53,3 +53,7 @@ The KITTI-MOT dataset should be organized as follows:
 ```bash
 ds-train denser --data ~/kitti/image_02/0006'
 ```
+## TODO
+
+- write rendering script.
+- Write evaluation script.
