@@ -46,3 +46,10 @@ The KITTI-MOT dataset should be organized as follows:
     └── oxts
         └── sequence_id.txt
 ```
+
+
+## Training 
+
+```bash
+ds-train denser --data ~/kitti/image_02/0006'
+```
