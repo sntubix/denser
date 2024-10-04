@@ -65,7 +65,7 @@ The KITTI-MOT dataset should be organized as follows:
     ├── label_02
     │   └── sequence_id.txt
     ├── object_lidars
-    │   └── object_id.txt
+    │   └── object_id.ply
             ....
     └── oxts
         └── sequence_id.txt
