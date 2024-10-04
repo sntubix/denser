@@ -81,3 +81,15 @@ ds-render --load_config /path/to/your/config/config.yml
 ds-eval --load_config /path/to/your/config/config.yml
 
 ```
+
+```
+@misc{mohamad2024denser,
+      title={DENSER: 3D Gaussians Splatting for Scene Reconstruction of Dynamic Urban Environments}, 
+      author={Mahmud A. Mohamad and Gamal Elghazaly and Arthur Hubert and Raphael Frank},
+      year={2024},
+      eprint={2409.10041},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2409.10041}, 
+}
+```
