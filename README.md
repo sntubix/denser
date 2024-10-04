@@ -79,11 +79,11 @@ ds-train denser --data /data/kitti/image_02/0006'
 ds-render --load_config /path/to/your/config/config.yml
 ds-eval --load_config /path/to/your/config/config.yml
 ```
-## preprocessed Dataset
+## preprocessed Datasets
 
 coming soon
 
-## pretrained model
+## pretrained models
 
 coming soon
 
