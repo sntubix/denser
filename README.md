@@ -30,7 +30,7 @@ pip install --upgrade pip
 ```
 ### Clone the Repository
 ```bash
-git clone https://github.com/mahmudi95/DENSER.git --recursive
+git clone https://github.com/sntubix/denser.git --recursive
 ```
 ### Install Dependencies
 ```bash
@@ -75,12 +75,9 @@ The KITTI-MOT dataset should be organized as follows:
 ## Training,Rendering
 
 ```bash
-ds-train denser --data /data/image_02/0006'
+ds-train denser --data /data/kitti/image_02/0006'
 
-ds-render --load_config /path/to/your/config/0006/config.yml
+ds-render --load_config /path/to/your/config/config.yml
+ds-eval --load_config /path/to/your/config/config.yml
+
 ```
-
-## TODO
-
-- write rendering script.
-- Write evaluation script.
