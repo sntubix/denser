@@ -34,7 +34,7 @@ git clone https://github.com/sntubix/denser.git --recursive
 ```
 ### Install Dependencies
 ```
-cd DENSER
+cd denser
 bash installation.sh
 ```
 ### Install denser 
