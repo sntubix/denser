@@ -1,17 +1,5 @@
 <div align="center"><h2>DENSER: 3D Gaussians Splatting for Scene Reconstruction of Dynamic Urban Environments</h2></div>
 
-<!-- <p align="center">
-    <!-- Add links or badges here -->
-    <a href="https://your_project_page.com"><img src=""/></a>
-    <a href="https://arxiv.org/abs/1234.56789">
-        <img src=''>
-    <!-- </a>
-    <a href="https://pypi.org/project/denser-project/"><img src="https://img.shields.io/badge/pypi package-0.1.0-brightgreen" alt="PyPI version"></a>
-    <a href='https://your_project_poster.pdf'>
-        <img src='https://img.shields.io/badge/Poster-PDF-pink' />
-    </a> -->
-</p> -->
-
 <div align="center"><h4>Scene Reconstruction Results</h4></div>
 
 <div align="center">
