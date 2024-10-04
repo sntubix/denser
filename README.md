@@ -2,17 +2,21 @@
 
 <div align="center"><h4>Scene Reconstruction Results</h4></div>
 
+<div align="center"><h4>Ground Truth</h4></div>
 <div align="center">
   <img alt="Ground Truth Output" src="./assets/videos/scene_0006_gt_output.gif" width="600px">
 </div>
 
+<div align="center"><h4>Reconstruction</h4></div>
 <div align="center">
   <img alt="Reconstruction Output" src="./assets/videos/scene_0006_recoon_output.gif" width="600px">
 </div>
 
+<!-- <div align="center"><h4>Object Output</h4></div> -->
 <div align="center">
   <img alt="Object Output" src="./assets/videos/scene_0006_obj_output.gif" width="600px">
 </div>
+
 
 ## Installation
 
