@@ -26,11 +26,11 @@ denser =  MethodSpecification(
 
     config = TrainerConfig(
         method_name="denser",
-        steps_per_eval_image=1000,
-        steps_per_eval_batch=1000,
+        steps_per_eval_image=500,
+        steps_per_eval_batch=500,
         steps_per_save=2000,
-        steps_per_eval_all_images=5000,
-        max_num_iterations=200000,
+        steps_per_eval_all_images=1000,
+        max_num_iterations=30000,
         mixed_precision=False,
 
         pipeline = VanillaPipelineConfig(

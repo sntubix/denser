@@ -72,7 +72,7 @@ The KITTI-MOT dataset should be organized as follows:
 ```
 
 
-## Training,Rendering,evaluation
+## Training,Rendering,Evaluation
 
 ```
 ds-train denser --data /data/kitti/image_02/0006'
