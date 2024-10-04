@@ -37,7 +37,7 @@ git clone https://github.com/sntubix/denser.git --recursive
 cd DENSER
 bash installation.sh
 ```
-### Install DENSER 
+### Install denser 
 ```
 pip install -e .
 ```
