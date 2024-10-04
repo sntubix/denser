@@ -32,7 +32,7 @@ class SceneModelConfig(SplatfactoModelConfig):
     """Background model config"""
     object_model_template: SplatfactoModelConfig = field(default_factory=SplatfactoModelConfig)
     """Object model config"""
-    object_acc_entropy_loss_mult: float = 0.002
+    object_acc_entropy_loss_mult: float = 0.001
 
 class SceneModel(SplatfactoModel):
     """Gaussian Splatting model
@@ -388,6 +388,7 @@ class SceneModel(SplatfactoModel):
             object_acc = torch.clamp(outputs['object_acc'], min=1e-5, max=1-1e-5)
             losses['object_acc_entropy_loss'] = self.config.object_acc_entropy_loss_mult * \
             -(object_acc*torch.log(object_acc) + (1. - object_acc)*torch.log(1. - object_acc)).mean()
+
 
         return losses
 

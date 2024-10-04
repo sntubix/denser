@@ -80,6 +80,7 @@ ds-render --load_config /path/to/your/config/config.yml
 ds-eval --load_config /path/to/your/config/config.yml
 ```
 
+## Citation
 ```
 @misc{mohamad2024denser,
       title={DENSER: 3D Gaussians Splatting for Scene Reconstruction of Dynamic Urban Environments}, 

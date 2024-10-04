@@ -158,7 +158,7 @@ class SplatfactoModelConfig(ModelConfig):
     """Dimension of the Fourier features used for the diffuse component of the SH."""
     time_scale_factor: int = 1
     """Scale of the Fourier features used for the diffuse component of the SH."""
-    depth_loss_mult: float = 1e-2
+    depth_loss_mult: float = 1e-6
 
 class SplatfactoModel(Model):
     """Nerfstudio's implementation of Gaussian Splatting

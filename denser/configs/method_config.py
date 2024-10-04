@@ -30,7 +30,7 @@ denser =  MethodSpecification(
         steps_per_eval_batch=1000,
         steps_per_save=2000,
         steps_per_eval_all_images=5000,
-        max_num_iterations=30000,
+        max_num_iterations=200000,
         mixed_precision=False,
 
         pipeline = VanillaPipelineConfig(
