@@ -31,6 +31,7 @@ from nerfstudio.model_components import renderers
 from nerfstudio.models.base_model import Model, ModelConfig
 from nerfstudio.utils.colors import get_color
 from nerfstudio.utils.rich_utils import CONSOLE
+from denser.model_components.losses import berhu_loss, silog_loss,monosci_depth_loss
 
 
 def random_quat_tensor(N):
@@ -137,7 +138,7 @@ class SplatfactoModelConfig(ModelConfig):
     """threshold of ratio of gaussian max to min scale before applying regularization
     loss from the PhysGaussian paper
     """
-    output_depth_during_training: bool = False
+    output_depth_during_training: bool = True
     """If True, output depth during training. Otherwise, only output depth during evaluation."""
     rasterize_mode: Literal["classic", "antialiased"] = "classic"
     """
@@ -157,6 +158,7 @@ class SplatfactoModelConfig(ModelConfig):
     """Dimension of the Fourier features used for the diffuse component of the SH."""
     time_scale_factor: int = 1
     """Scale of the Fourier features used for the diffuse component of the SH."""
+    depth_loss_mult: float = 1e-2
 
 class SplatfactoModel(Model):
     """Nerfstudio's implementation of Gaussian Splatting
@@ -978,9 +980,9 @@ class SplatfactoModel(Model):
             batch: ground truth batch corresponding to outputs
             metrics_dict: dictionary of metrics, some of which we can use for loss
         """
+        loss_dict={}
         gt_img = self.composite_with_background(self.get_gt_img(batch["image"]), outputs["background"])
         pred_img = outputs["rgb"]
-
         # Set masked part of both ground-truth and rendered image to black.
         # This is a little bit sketchy for the SSIM loss.
         if "mask" in batch:
@@ -990,6 +992,19 @@ class SplatfactoModel(Model):
             assert mask.shape[:2] == gt_img.shape[:2] == pred_img.shape[:2]
             gt_img = gt_img * mask
             pred_img = pred_img * mask
+
+        if self.training and "depth_image" in batch :
+            assert "depth_image" in batch
+            assert "depth_mask" in batch
+            depth_gt = batch["depth_image"].to(self.device).float()
+            depth_mask = batch["depth_mask"].to(self.device)
+            predicted_depth = outputs['depth']
+
+            sci_loss = monosci_depth_loss(predicted_depth, depth_gt, depth_mask)
+
+            # For now, use sci_loss as the primary depth loss
+            loss_dict["depth_loss"] = self.config.depth_loss_mult * sci_loss
+
 
         Ll1 = torch.abs(gt_img - pred_img).mean()
         simloss = 1 - self.ssim(gt_img.permute(2, 0, 1)[None, ...], pred_img.permute(2, 0, 1)[None, ...])
@@ -1006,10 +1021,14 @@ class SplatfactoModel(Model):
         else:
             scale_reg = torch.tensor(0.0).to(self.device)
 
-        loss_dict = {
-            "main_loss": (1 - self.config.ssim_lambda) * Ll1 + self.config.ssim_lambda * simloss,
-            # "scale_reg": scale_reg,
-        }
+            # Add the main loss to the loss_dict
+        main_loss = (1 - self.config.ssim_lambda) * Ll1 + self.config.ssim_lambda * simloss
+        loss_dict["main_loss"] = main_loss
+
+        # loss_dict = {
+        #     "main_loss": (1 - self.config.ssim_lambda) * Ll1 + self.config.ssim_lambda * simloss,
+        #     # "scale_reg": scale_reg,
+        # }
 
         if self.training:
             # Add loss from camera optimizer
@@ -1075,3 +1094,5 @@ class SplatfactoModel(Model):
         images_dict = {"img": combined_rgb,"accumulation": combined_acc}
 
         return metrics_dict, images_dict
+    
+    

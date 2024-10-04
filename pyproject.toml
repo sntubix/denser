@@ -10,12 +10,12 @@ readme = "README.md"
 
 requires-python = ">=3.8.0"
 classifiers = [
-    "Development Status :: 3 - Alpha",
     "Programming Language :: Python",
 ]
 
 dependencies = [
     "nerfstudio==1.1.0",
+    "gsplat==0.1.12"
 ]
 
 
@@ -36,5 +36,5 @@ KittiData = 'denser.data.dataparsers.ubix_kitti_dataparser:KittiParserSpec'
 
 ds-train = "nerfstudio.scripts.train:entrypoint"
 ds-viewer = "nerfstudio.scripts.viewer.run_viewer:entrypoint"
-ds-eval = "nerfstudio.scripts.eval:entrypoint"
-ds-render = "nerfstudio.scripts.render:entrypoint"
+ds-eval = "denser.scripts.eval:entrypoint"
+ds-render = "denser.scripts.render:entrypoint"

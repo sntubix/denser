@@ -1,8 +1,4 @@
 #!/bin/bash
-# Activate the conda environment
-echo "Activating the conda environment 'denser'..."
-conda init
-conda activate denser
 
 # Install PyTorch and torchvision with CUDA support
 echo "Installing PyTorch and torchvision with CUDA 11.8 support..."
@@ -20,9 +16,6 @@ pip install ninja git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindi
 echo "Installing PyTorch3D..."
 
 pip install "git+https://github.com/facebookresearch/pytorch3d.git@stable"
-# Install the current package in editable mode
-echo "Installing the current package in editable mode..."
-pip install -e .
 
 pip install "numpy<2"
 

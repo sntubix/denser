@@ -1073,7 +1073,6 @@ class MarsKittiParser(DataParser):
         counts = counts.reshape(-1)
         i_train = counts[i_train]
         i_test = counts[i_test]
-        print(i_test)
         novel_view = self.novel_view
         shift_frame = None
         n_oneside = int(poses.shape[0] / 2)
@@ -1164,14 +1163,18 @@ class MarsKittiParser(DataParser):
         if split == "train":
             indices = i_train
         elif split == "val":
-            indices = i_test
-            # indices = i_val
+            if self.config.split_setting == "reconstruction":
+                indices = i_train
+            else:
+                indices = i_test
         elif split == "test":
-            indices = i_test
+            if self.config.split_setting == "reconstruction":
+                indices = i_train
+            else:
+                indices = i_test
         else:
             raise ValueError(f"Unknown dataparser split {split}")
 
-    
         input_size = 0
 
         obj_nodes_tensor = torch.from_numpy(obj_nodes)
@@ -1268,6 +1271,7 @@ class MarsKittiParser(DataParser):
             mask_filenames=None,
             dataparser_scale=self.scale_factor,
             metadata={
+                "eval_indices":i_test,
                 "depth_filenames": depth_filenames,
                 "obj_metadata":  obj_meta_tensor if len(obj_meta_tensor) > 0 else None,
                 "obj_class": scene_classes if len(scene_classes) > 0 else None,

@@ -5,17 +5,9 @@ from typing import Dict
 
 import tyro
 
-
-from denser.data.datamanagers.ubix_datamanager import UbixDataManagerConfig, UbixDataManager 
-from denser.data.dataparsers.ubix_kitti_dataparser import MarsKittiDataParserConfig
-from denser.models.scene_model import SceneModelConfig 
-from denser.models.splatfacto import SplatfactoModelConfig
-
-from nerfstudio.data.datamanagers.full_images_datamanager import FullImageDatamanagerConfig,FullImageDatamanager
-
+# from denser.data.datamanagers.ubix_datamanager import FullImageDatamanagerConfig,
 from nerfstudio.engine.trainer import TrainerConfig
 from nerfstudio.configs.base_config import ViewerConfig
-from nerfstudio.data.datamanagers.full_images_datamanager import FullImageDatamanagerConfig,FullImageDatamanager
 from nerfstudio.pipelines.base_pipeline import VanillaPipelineConfig
 import torch
 from nerfstudio.engine.optimizers import AdamOptimizerConfig
@@ -24,22 +16,26 @@ from nerfstudio.engine.schedulers import (
 )
 from nerfstudio.plugins.types import MethodSpecification
 
+from denser.data.datamanagers.ubix_datamanager import UbixDataManagerConfig, UbixDataManager 
+from denser.data.dataparsers.ubix_kitti_dataparser import MarsKittiDataParserConfig
+from denser.models.scene_model import SceneModelConfig 
+from denser.models.splatfacto import SplatfactoModelConfig
+
 
 denser =  MethodSpecification(
 
     config = TrainerConfig(
         method_name="denser",
-        steps_per_eval_image=500,
-        steps_per_eval_batch=500,
+        steps_per_eval_image=1000,
+        steps_per_eval_batch=1000,
         steps_per_save=2000,
-        steps_per_eval_all_images=1000,
+        steps_per_eval_all_images=5000,
         max_num_iterations=30000,
         mixed_precision=False,
 
         pipeline = VanillaPipelineConfig(
             datamanager= UbixDataManagerConfig( 
-                dataparser = MarsKittiDataParserConfig(data = Path('/home/users/maali/thesis_project/kitti/image_02/0006'),
-                                                       use_depth=False,
+                dataparser = MarsKittiDataParserConfig(use_depth=True,
                                                        scale_factor=0.1,
                                                        split_setting= 'reconstruction'),
                 cache_images_type="uint8",

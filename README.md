@@ -1,19 +1,52 @@
-# DENSER
+<div align="center"><h2>DENSER: 3D Gaussians Splatting for Scene Reconstruction of Dynamic Urban Environments</h2></div>
+
+<!-- <p align="center">
+    <!-- Add links or badges here -->
+    <a href="https://your_project_page.com"><img src=""/></a>
+    <a href="https://arxiv.org/abs/1234.56789">
+        <img src=''>
+    <!-- </a>
+    <a href="https://pypi.org/project/denser-project/"><img src="https://img.shields.io/badge/pypi package-0.1.0-brightgreen" alt="PyPI version"></a>
+    <a href='https://your_project_poster.pdf'>
+        <img src='https://img.shields.io/badge/Poster-PDF-pink' />
+    </a> -->
+</p> -->
+
+<div align="center"><h4>Scene Reconstruction Results</h4></div>
+
+<div align="center">
+  <img alt="Ground Truth Output" src="./assets/scene_0006_gt_output.gif" width="600px">
+</div>
+
+<div align="center">
+  <img alt="Reconstruction Output" src="./assets/scene_0006_recoon_output.gif" width="600px">
+</div>
+
+<div align="center">
+  <img alt="Object Output" src="./assets/scene_0006_obj_output.gif" width="600px">
+</div>
+
 
 ## Installation
 
 ## Installing DENSER:
 
-### Step 1: Clone the Repository
+### Create environment
+
+conda create --name denser -y python=3.8
+conda activate denser
+pip install --upgrade pip
+
+### Clone the Repository
 ```bash
 git clone https://github.com/mahmudi95/DENSER.git --recursive
 ```
-### Step 2: Install Dependencies
+### Install Dependencies
 ```bash
 cd DENSER
 bash installation.sh
 ```
-### Step 3: Install DENSER 
+### Install DENSER 
 ```bash
 pip install -e .
 ```
@@ -48,11 +81,14 @@ The KITTI-MOT dataset should be organized as follows:
 ```
 
 
-## Training 
+## Training,Rendering
 
 ```bash
-ds-train denser --data ~/kitti/image_02/0006'
+ds-train denser --data /data/image_02/0006'
+
+ds-render --load_config /path/to/your/config/0006/config.yml
 ```
+
 ## TODO
 
 - write rendering script.

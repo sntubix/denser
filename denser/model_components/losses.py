@@ -1,58 +1,73 @@
 import torch
-import torch.nn.functional as F
-from torch.nn.functional import interpolate
-from rich.console import Console
+import torch
+from jaxtyping import Float
+from torch import Tensor
+from nerfstudio.model_components.losses import ScaleAndShiftInvariantLoss
 
-CONSOLE = Console()
-
-
-def depth_loss(pred_depth, gt_depth, mask=None, lambda_smooth=0.1):
+def silog_loss(predicted_depth, depth_gt, depth_mask, epsilon=1e-6):
     """
-    Compute depth loss for Gaussian splatting to ensure Gaussians are placed correctly.
+    Computes the Scale-Invariant Logarithmic (SILog) Loss between predicted and ground truth depth.
     
     Args:
-    pred_depth (torch.Tensor): Predicted depth map from the model.
-    gt_depth (torch.Tensor): Ground-truth depth map.
-    mask (torch.Tensor, optional): Mask indicating valid depth regions. Default is None.
-    lambda_smooth (float, optional): Weight for the smoothness regularization term. Default is 0.1.
-    
+        predicted_depth (torch.Tensor): The predicted depth map (B, H, W).
+        depth_gt (torch.Tensor): The ground truth depth map (B, H, W).
+        depth_mask (torch.Tensor): The binary mask indicating valid depth pixels (B, H, W).
+        epsilon (float): A small constant to avoid log(0).
+        
     Returns:
-    torch.Tensor: Calculated depth loss.
-    # """
-    # CONSOLE.log(f"pred_depth.shape = {pred_depth.shape}")
-    # CONSOLE.log(f"gt_depth.shape = {gt_depth.shape}")
-    # Ensure pred_depth has 3 dimensions and gt_depth has 2 dimensions
-    if pred_depth.dim() == 3:
-        pred_depth = pred_depth.squeeze(-1)  # Remove the last dimension if it is 1
+        torch.Tensor: The computed SILog loss.
+    """
+    # Apply the depth mask to select valid pixels
+    valid_predicted_depth = predicted_depth[depth_mask]
+    valid_depth_gt = depth_gt[depth_mask]
 
-    if gt_depth.dim() == 3:
-        gt_depth = gt_depth.squeeze(-1)  # Remove the last dimension if it is 1
+    # Ensure valid depth values (positive) by clamping small values
+    valid_predicted_depth = torch.clamp(valid_predicted_depth, min=epsilon)
+    valid_depth_gt = torch.clamp(valid_depth_gt, min=epsilon)
 
-    # Ensure pred_depth and gt_depth have the same shape
-    if pred_depth.shape != gt_depth.shape:
-        pred_depth = interpolate(pred_depth.unsqueeze(0).unsqueeze(0), size=gt_depth.shape[-2:], mode='bilinear', align_corners=False).squeeze(0).squeeze(0)
+    # Compute the logarithmic difference
+    log_diff = torch.log(valid_predicted_depth) - torch.log(valid_depth_gt)
 
-    if pred_depth is None:
-        # Return a large loss value if pred_depth is None
-        return torch.tensor(1e6, device=gt_depth.device)
+    # Scale-Invariant Logarithmic Loss
+    silog_loss_value = torch.mean(log_diff ** 2) - (torch.mean(log_diff) ** 2)
+
+    return silog_loss_value
+
+def berhu_loss(predicted_depth, depth_gt, depth_mask, c=0.2):
+    """
+    Computes the BerHu (Reverse Huber) Loss between predicted and ground truth depth.
     
-    
-    assert pred_depth.shape == gt_depth.shape, "Predicted and ground-truth depth maps must have the same shape."
+    Args:
+        predicted_depth (torch.Tensor): The predicted depth map (B, H, W).
+        depth_gt (torch.Tensor): The ground truth depth map (B, H, W).
+        depth_mask (torch.Tensor): The binary mask indicating valid depth pixels (B, H, W).
+        c (float): Threshold parameter that controls the transition from L1 to L2 loss.
+        
+    Returns:
+        torch.Tensor: The computed BerHu loss.
+    """
+    # Apply the depth mask
+    valid_predicted_depth = predicted_depth[depth_mask]
+    valid_depth_gt = depth_gt[depth_mask]
 
-    # If a mask is provided, apply it to the ground-truth and predicted depths
-    if mask is not None:
-        pred_depth = pred_depth * mask.squeeze(-1)
-        gt_depth = gt_depth * mask.squeeze(-1)
+    # Calculate absolute difference between predicted and ground truth depth
+    diff = torch.abs(valid_predicted_depth - valid_depth_gt)
 
-    # Compute Mean Squared Error (MSE) loss
-    depth_loss = F.mse_loss(pred_depth, gt_depth)
+    # Find the threshold for BerHu (c * max absolute difference)
+    threshold = c * torch.max(diff)
 
-    # Compute smoothness loss (optional)
-    # dx_pred_depth = torch.abs(pred_depth[:, :, 1:] - pred_depth[:, :, :-1])
-    # dy_pred_depth = torch.abs(pred_depth[:, 1:, :] - pred_depth[:, :-1, :])
-    # smoothness_loss = dx_pred_depth.mean() + dy_pred_depth.mean()
+    # Apply BerHu loss formula
+    l1_part = diff[diff <= threshold]
+    l2_part = diff[diff > threshold]
 
-    # Combine depth loss and smoothness loss
-    total_loss = depth_loss + lambda_smooth #* smoothness_loss
+    # L1 loss for small differences, L2 loss for large differences
+    loss = torch.cat([l1_part, (l2_part ** 2 + threshold ** 2) / (2 * threshold)])
 
-    return total_loss
+    return loss.mean()
+
+
+
+def monosci_depth_loss(predicted_depth, depth_gt, depth_mask):
+    scale_shift_invariant_loss_fn = ScaleAndShiftInvariantLoss(alpha=0.5, scales=1, reduction_type="batch")
+    ssi_loss = scale_shift_invariant_loss_fn(predicted_depth, depth_gt, depth_mask)
+    return ssi_loss
