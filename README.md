@@ -20,11 +20,11 @@
 ## Installing DENSER:
 
 ### Create environment
-
+```bash
 conda create --name denser -y python=3.8
 conda activate denser
 pip install --upgrade pip
-
+```
 ### Clone the Repository
 ```bash
 git clone https://github.com/mahmudi95/DENSER.git --recursive
