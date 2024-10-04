@@ -23,22 +23,22 @@
 ## Installing DENSER:
 
 ### Create environment
-```bash
+```
 conda create --name denser -y python=3.8
 conda activate denser
 pip install --upgrade pip
 ```
 ### Clone the Repository
-```bash
+```
 git clone https://github.com/sntubix/denser.git --recursive
 ```
 ### Install Dependencies
-```bash
+```
 cd DENSER
 bash installation.sh
 ```
 ### Install DENSER 
-```bash
+```
 pip install -e .
 ```
 ## Data Organization
@@ -74,12 +74,10 @@ The KITTI-MOT dataset should be organized as follows:
 
 ## Training,Rendering
 
-```bash
+```
 ds-train denser --data /data/kitti/image_02/0006'
-
 ds-render --load_config /path/to/your/config/config.yml
 ds-eval --load_config /path/to/your/config/config.yml
-
 ```
 
 ```
